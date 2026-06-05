@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CaaS Zero-Trust Regulatory Gateway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;500;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .terminal-scroll::-webkit-scrollbar { width: 4px; }
+    .terminal-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    .pulse-glow { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col h-screen overflow-hidden">
+
+  <!-- Top Navigation Bar -->
+  <header class="bg-slate-900 border-b border-slate-800 p-4 flex justify-between items-center shrink-0">
+    <div class="flex items-center gap-4">
+      <div class="h-8 w-8 bg-emerald-500 rounded flex items-center justify-center text-slate-950 font-bold">C/O</div>
+      <div>
+        <h1 class="text-sm font-bold tracking-widest text-slate-200 uppercase">Calibre Ops CaaS</h1>
+        <p class="text-[10px] text-emerald-400 mono">Zero-Trust Regulatory Gateway v1.0.4</p>
+      </div>
+    </div>
+    <div class="flex gap-4 items-center">
+      <div class="text-right hidden md:block">
+        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Global Compliance Status</p>
+        <p class="text-sm font-bold text-emerald-500 mono flex items-center gap-2 justify-end">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 99.994% VERIFIED
+        </p>
+      </div>
+      <div class="h-6 w-px bg-slate-700"></div>
+      <button id="btn-stress-test" class="bg-rose-950/30 hover:bg-rose-900/50 border border-rose-800/50 text-rose-400 px-4 py-2 rounded text-xs font-bold uppercase transition-all duration-200">
+        Simulate Grid Stress
+      </button>
+      <button id="btn-supply-shock" class="bg-amber-950/30 hover:bg-amber-900/50 border border-amber-800/50 text-amber-400 px-4 py-2 rounded text-xs font-bold uppercase transition-all duration-200">
+        Simulate Supply Shock
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Grid -->
+  <main class="flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+    
+    <!-- Left Column: Node Telemetry & Telemetry -->
+    <div class="lg:col-span-8 flex flex-col gap-4 overflow-hidden">
+      
+      <!-- Top Row: Metric Cards -->
+      <div class="grid grid-cols-3 gap-4 shrink-0">
+        <!-- Metric 1 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col justify-between pulse-glow">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider">Aggregate Energy Draw</p>
+          <p class="text-2xl font-bold mono text-sky-400 mt-2" id="metric-energy">1.42 TW/h</p>
+          <div class="w-full bg-slate-800 h-1 mt-3 rounded overflow-hidden">
+            <div class="bg-sky-400 h-full w-[45%]"></div>
+          </div>
+        </div>
+        <!-- Metric 2 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider">Regulatory Lag (Λ)</p>
+          <p class="text-2xl font-bold mono text-amber-400 mt-2" id="metric-lag">4.2 Yrs</p>
+          <p class="text-[9px] text-slate-500 mt-1 uppercase">Arbitrage Window Active</p>
+        </div>
+        <!-- Metric 3 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider">Avg Mycelial Conductance (Kxy)</p>
+          <p class="text-2xl font-bold mono text-emerald-400 mt-2" id="metric-conductance">0.92</p>
+          <p class="text-[9px] text-slate-500 mt-1 uppercase">State Propagation Nominal</p>
+        </div>
+      </div>
+
+      <!-- Live Node Telemetry Table -->
+      <div class="bg-slate-900 border border-slate-800 rounded-lg flex-1 flex flex-col overflow-hidden">
+        <div class="p-3 border-b border-slate-800 bg-slate-950/50">
+          <h2 class="text-xs font-bold text-slate-300 uppercase tracking-widest">Mitochondrial Node Telemetry (Hyperscale Edge)</h2>
+        </div>
+        <div class="flex-1 overflow-auto terminal-scroll">
+          <table class="w-full text-left border-collapse">
+            <thead class="sticky top-0 bg-slate-900 border-b border-slate-800 text-[10px] uppercase text-slate-500">
+              <tr>
+                <th class="p-3 font-medium">Node ID</th>
+                <th class="p-3 font-medium">Temp (°C)</th>
+                <th class="p-3 font-medium">Queue [ADP]</th>
+                <th class="p-3 font-medium">Energy Charge (ψe)</th>
+                <th class="p-3 font-medium">Gatekeeper (Γ)</th>
+                <th class="p-3 font-medium">Compliance State</th>
+              </tr>
+            </thead>
+            <tbody id="node-table-body" class="text-xs mono">
+              <!-- JS Populated Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Fracture Index & Mycelial Log -->
+    <div class="lg:col-span-4 flex flex-col gap-4 overflow-hidden">
+      
+      <!-- Supply Chain Fracture Chart -->
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 shrink-0 h-64 flex flex-col">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-xs font-bold text-slate-300 uppercase tracking-widest">Supply-Chain Fracture Index (Fs)</h2>
+          <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">36-Mo Projection</span>
+        </div>
+        <div class="flex-1 relative w-full">
+          <canvas id="fractureChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Live Mycelial Gossip Terminal -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-lg flex-1 flex flex-col overflow-hidden relative">
+        <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+          <h2 class="text-xs font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-2">
+            <span class="h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></span>
+            Mycelial Consensus Log
+          </h2>
+          <span class="text-[9px] text-slate-500 mono">PORT: 8443</span>
+        </div>
+        <div class="p-3 overflow-y-auto flex-1 terminal-scroll mono text-[10px] space-y-1" id="terminal-log">
+          <!-- JS Populated Logs -->
+        </div>
+        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-[#0f172a] to-transparent pointer-events-none"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // --- 1. System Initialization & Data Structures ---
+    const NUM_NODES = 8;
+    let nodes = [];
+    let systemStressed = false;
+    let baseEnergy = 1.42;
+
+    // Initialize Nodes
+    for(let i=0; i<NUM_NODES; i++) {
+      nodes.push({
+        id: `HS-EDGE-${1000 + i}`,
+        temp: 45.0 + (Math.random() * 15),
+        queueAdp: 20 + Math.floor(Math.random() * 30),
+        psiE: 0.9,
+        gamma: 1.0,
+        status: 'NOMINAL'
+      });
+    }
+
+    // --- 2. Chart.js Setup (Supply Chain Fracture Index) ---
+    const ctx = document.getElementById('fractureChart').getContext('2d');
+    const fractureChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1+', 'Q2+', 'Q3+'],
+        datasets: [
+          {
+            label: 'Copper (High-Voltage)',
+            data: [1.2, 1.4, 1.7, 2.1, 2.8, 3.5, 4.2],
+            borderColor: '#fbbf24', // Amber
+            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Neodymium (Magnets)',
+            data: [1.0, 1.1, 1.3, 1.5, 1.9, 2.5, 3.8],
+            borderColor: '#f43f5e', // Rose
+            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, labels: { color: '#94a3b8', font: { size: 9 } }, position: 'bottom' },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(51, 65, 85, 0.5)' }, ticks: { color: '#64748b', font: { size: 9 } } },
+          y: { grid: { color: 'rgba(51, 65, 85, 0.5)' }, ticks: { color: '#64748b', font: { size: 9 } }, beginAtZero: true, max: 5 }
+        }
+      }
+    });
+
+    // --- 3. UI Update Functions ---
+    const tbody = document.getElementById('node-table-body');
+    const terminal = document.getElementById('terminal-log');
+    
+    function updateDashboard() {
+      tbody.innerHTML = '';
+      let totalGamma = 0;
+
+      nodes.forEach(node => {
+        // Calculate Digital Energy Charge (ψe) = ATP / (ADP + AMP)
+        // Simplified mapping: Higher temp = lower ATP. Higher queue = higher ADP.
+        const thermalCeiling = 85.0;
+        let atp = Math.max(0.01, (thermalCeiling - node.temp) / thermalCeiling);
+        let adpFactor = node.queueAdp / 100.0;
+        
+        node.psiE = atp / (atp + adpFactor);
+        if(node.psiE > 1) node.psiE = 1.0;
+
+        // Calculate Enzymatic Gatekeeper (Γ) using Hill Equation (n=4)
+        const km = 0.50;
+        node.gamma = Math.pow(node.psiE, 4) / (Math.pow(km, 4) + Math.pow(node.psiE, 4));
+        totalGamma += node.gamma;
+
+        // Determine Status based on Γ
+        let statusClass = "text-emerald-400";
+        node.status = "VERIFIED";
+        
+        if(node.gamma < 0.1) {
+          statusClass = "text-rose-500 animate-pulse font-bold";
+          node.status = "EXOCYTOSIS_THROTTLE";
+        } else if (node.gamma < 0.8) {
+          statusClass = "text-amber-400";
+          node.status = "RATE_LIMITED";
+        }
+
+        const row = `
+          <tr class="border-b border-slate-800/50 hover:bg-slate-800/20 transition-colors">
+            <td class="p-3 text-slate-300">${node.id}</td>
+            <td class="p-3 ${node.temp > 75 ? 'text-rose-400 font-bold' : 'text-slate-400'}">${node.temp.toFixed(1)}</td>
+            <td class="p-3 text-slate-400">${Math.floor(node.queueAdp)}</td>
+            <td class="p-3 text-sky-400">${node.psiE.toFixed(3)}</td>
+            <td class="p-3 text-slate-300">${node.gamma.toFixed(3)}</td>
+            <td class="p-3 ${statusClass}">${node.status}</td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML('beforeend', row);
+      });
+
+      // Update Top Metrics
+      let avgGamma = totalGamma / NUM_NODES;
+      document.getElementById('metric-conductance').innerText = avgGamma.toFixed(2);
+      
+      let energyDraw = baseEnergy + (Math.random() * 0.05);
+      if(systemStressed) energyDraw += 0.8;
+      document.getElementById('metric-energy').innerText = energyDraw.toFixed(2) + ' TW/h';
+    }
+
+    function addTerminalLog() {
+      const hashes = ['0x4F9B...2A1C', '0x9E2A...B74D', '0x1C8F...39E2', '0x7D4A...F10C'];
+      const actions = ['[OSMOTIC_PROPAGATE]', '[STATE_VERIFIED]', '[ENERGY_PROVENANCE_LOG]'];
+      const node = nodes[Math.floor(Math.random() * nodes.length)];
+      
+      if(node.gamma < 0.1 && Math.random() > 0.5) {
+        logToTerminal(`<span class="text-rose-500">[CAAS_INTERVENE] ${node.id} Thermal boundary breached. State propagation halted.</span>`);
+        return;
+      }
+
+      const hash = hashes[Math.floor(Math.random() * hashes.length)];
+      const action = actions[Math.floor(Math.random() * actions.length)];
+      const pressure = (node.gamma * node.queueAdp * 0.1).toFixed(2);
+      
+      logToTerminal(`<span class="text-slate-500">${new Date().toISOString().split('T')[1].slice(0,-1)}</span> <span class="text-emerald-400">${action}</span> Node:${node.id} Π:${pressure} Hash:${hash}`);
+    }
+
+    function logToTerminal(htmlString) {
+      const p = document.createElement('p');
+      p.innerHTML = htmlString;
+      terminal.appendChild(p);
+      if(terminal.childElementCount > 50) terminal.removeChild(terminal.firstChild);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    // --- 4. Simulation Loop ---
+    setInterval(() => {
+      // Fluctuate node data
+      nodes.forEach(node => {
+        let tempDelta = (Math.random() * 2) - 1;
+        let queueDelta = (Math.random() * 10) - 5;
+        
+        if(systemStressed) {
+          tempDelta = Math.random() * 3; // Fast heating
+          queueDelta = Math.random() * 20; // Queue buildup
+        } else {
+          // Cool down naturally if not stressed
+          if(node.temp > 45) tempDelta -= 0.5;
+          if(node.queueAdp > 20) queueDelta -= 2;
+        }
+
+        // Apply EAMC Gatekeeper Throttle (Biology saving the hardware)
+        if(node.gamma < 0.2) {
+          queueDelta -= 15; // Exocytosis clears queue
+          tempDelta -= 2.0; // Throttling cools node
+        }
+
+        node.temp = Math.max(30, Math.min(84.9, node.temp + tempDelta));
+        node.queueAdp = Math.max(0, node.queueAdp + queueDelta);
+      });
+
+      updateDashboard();
+    }, 1000);
+
+    setInterval(addTerminalLog, 400);
+
+    // --- 5. Interactions ---
+    document.getElementById('btn-stress-test').addEventListener('click', (e) => {
+      systemStressed = !systemStressed;
+      e.target.classList.toggle('bg-rose-600');
+      e.target.classList.toggle('text-white');
+      if(systemStressed) {
+        e.target.innerText = "System Stressed (Click to Normalize)";
+        logToTerminal(`<span class="text-amber-500 font-bold">[ALERT] ARTIFICIAL WORKLOAD SPIKE INJECTED. MONITORING EAMC MITIGATION.</span>`);
+      } else {
+        e.target.innerText = "Simulate Grid Stress";
+        logToTerminal(`<span class="text-emerald-500 font-bold">[RECOVERY] NORMALIZING WORKLOADS.</span>`);
+      }
+    });
+
+    document.getElementById('btn-supply-shock').addEventListener('click', () => {
+      fractureChart.data.datasets[0].data = [1.2, 1.4, 1.7, 2.8, 3.9, 4.8, 5.0];
+      fractureChart.data.datasets[1].data = [1.0, 1.1, 1.3, 2.2, 3.5, 4.5, 4.9];
+      fractureChart.update();
+      logToTerminal(`<span class="text-rose-500 font-bold">[CRITICAL] SUPPLY CHAIN FRACTURE DETECTED. PROCUREMENT QUOTAS ENFORCED.</span>`);
+    });
+
+    // Initial render
+    updateDashboard();
+  </script>
+</body>
+</html>
