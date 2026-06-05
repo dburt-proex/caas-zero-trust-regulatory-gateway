@@ -1,0 +1,13 @@
+{
+  "name": "caas-zero-trust-regulatory-gateway",
+  "version": "1.0.0",
+  "description": "Static dashboard prototype for a CaaS Zero-Trust Regulatory Gateway.",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "preview": "vite --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
