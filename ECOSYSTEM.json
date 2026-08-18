@@ -1,0 +1,8 @@
+{
+  "registry": "dburt-proex/operator-intelligence:ecosystem/registry.json",
+  "registry_version": "1.0.0",
+  "repository": "dburt-proex/caas-zero-trust-regulatory-gateway",
+  "classification": "EXPERIMENT",
+  "authority_for": [],
+  "may_define_new_primitives": false
+}
